@@ -22,8 +22,8 @@ let searchCoordinates = function(c, t) {
   let [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
   let [code, setCode] = useState(
     currentQuestion
-      ? currentQuestion.content + "\n\n// Write your code here \n\n"
-      : "// No question content available."
+    ? currentQuestion.content + "\n\n// Write your code here \n\n" + `const ${currentQuestion["function_name"]} = function (${Object.keys(currentQuestion["input_type"]).join(", ")}) {\n}`
+    : "// No question content available."
   );
   let [output, setOutput] = useState("");
 

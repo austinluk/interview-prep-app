@@ -70,7 +70,7 @@ export default function TextToSpeech() {
     populateVoices();
   }, []);
 
-  const handleMicClick = async (event) => {
+  
   const handleMicClick = async (event) => {
     event.preventDefault(); // Prevent the default form submission
     if (isListening) {
@@ -128,5 +128,5 @@ export default function TextToSpeech() {
       </div>
     </form>
   );
-}
+
 }
