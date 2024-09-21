@@ -2,25 +2,34 @@
 
 import { useState } from "react";
 import Editor from "@monaco-editor/react";
+import questions from "@/data/questions";
 
 const CodeEditor = ({ width = "100%" }) => {
-  const [code, setCode] = useState(`
-    
-let a = function(){
-    return "austin likes boys"
-}
+  const initialQuestion =
+    questions.length > 0
+      ? questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
+      : null;
 
-a();`);
+  const [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
+  const [code, setCode] = useState(
+    currentQuestion
+      ? currentQuestion.content
+      : "// No question content available."
+  );
   const [output, setOutput] = useState("");
 
   const runCode = () => {
     try {
       const result = eval(code);
-      setOutput(result ? result.toString() : "No output");
+      setOutput(result || "No output");
     } catch (error) {
       setOutput(error.toString());
     }
   };
+
+  if (!currentQuestion) {
+    return <div>No questions available!</div>;
+  }
 
   return (
     <div
