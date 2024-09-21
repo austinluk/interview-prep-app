@@ -10,6 +10,7 @@ import {
 
 import { Timer } from "@/components/ui/timer";
 import Image from "next/image";
+import SpeechSynthesisComponent from "@/components/ui/SpeechToSpeechSynthesis";
 
 export default function Home() {
   return (
@@ -23,6 +24,11 @@ export default function Home() {
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
           <Timer />
+          {/* <p></p> */}
+          <p>Hello there</p>
+          <div className="bg-blue-300">
+            <SpeechSynthesisComponent />
+          </div>
           <div className="flex h-full items-center justify-center p-6">
             <TooltipProvider>
               <TextToSpeech />
