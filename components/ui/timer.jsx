@@ -38,14 +38,18 @@ export function Timer() {
   };
 
   return (
-    <div>
-      <h1>{formatTime(time)}</h1>
-      <Button variant="default" size="sm" onClick={startTimer}>
-        Start
-      </Button>
-      <Button variant="secondary" size="sm" onClick={pauseTimer}>
-        Pause
+
+    <div className="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 bg-white bg-opacity-90 p-4 rounded-md shadow-lg">
+      <h1 className="text-xl font-bold text-center">{formatTime(time)}</h1>
+      <div className="mt-2 space-x-2">
+        <Button variant="default" size="sm" onClick={startTimer}>
+          Start
         </Button>
+        <Button variant="secondary" size="sm" onClick={pauseTimer}>
+          Pause
+        </Button>
+      </div>
     </div>
+
   );
 }
