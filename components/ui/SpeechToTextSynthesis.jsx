@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,19 +12,20 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function TextToSpeech() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
 
   // Check if the browser supports SpeechRecognition
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition;
 
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.continuous = false; // Continuous listening or single phrase
-    recognition.lang = 'en-US'; // Set the language
+    recognition.lang = "en-US"; // Set the language
     recognition.interimResults = false; // Show partial results
   } else {
     console.error("SpeechRecognition is not supported in this browser.");
@@ -73,9 +74,6 @@ export default function TextToSpeech() {
 
   return (
     <form className="relative h-full w-full overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
-      <Label htmlFor="message" className="sr-only">
-        Message
-      </Label>
       <Textarea
         id="message"
         placeholder="Start speaking to start..."
@@ -86,7 +84,7 @@ export default function TextToSpeech() {
       <div className="flex items-center p-3 pt-0">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button onClick={handleMicClick} variant="ghost" size="icon">
+            <Button onClick={handleMicClick} variant="outline" size="icon">
               <Mic className="size-4" />
               <span className="sr-only">Use Microphone</span>
             </Button>

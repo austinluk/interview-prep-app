@@ -13,23 +13,28 @@ import { Timer } from "@/components/ui/timer";
 
 export default function Home() {
   return (
-    <div className="">
-      <ResizablePanelGroup direction="horizontal" className="w-full">
-        <ResizablePanel defaultSize={50}>
-          <div className="flex h-full items-center justify-center p-6">
-            <CodeEditor />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={50}>
-          <Timer />
-          <div className="flex h-full items-center justify-center p-6">
-            <TooltipProvider>
-              <SpeechToText />
-            </TooltipProvider>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+    <div className="h-screen flex flex-col p-2">
+      <header className="mx-8 my-3 font-bold bg-muted p-5 rounded-2xl">
+        <p className="text-2xl">Leet Me In</p>
+      </header>
+      <div className="flex-grow overflow-scroll">
+        <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+          <ResizablePanel defaultSize={50}>
+            <div className="h-full p-6 overflow-scroll">
+              <CodeEditor />
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50}>
+            <Timer />
+            <div className="h-full p-6">
+              <TooltipProvider>
+                <SpeechToText />
+              </TooltipProvider>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     </div>
   );
 }
