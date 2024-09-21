@@ -12,8 +12,8 @@ const CodeEditor = ({ width = "100%" }) => {
 
   const [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
   const [code, setCode] = useState(
-    currentQuestion
-      ? currentQuestion.content
+    currentQuestion 
+      ? currentQuestion.content + "\n\n// Write your code here \n\n"
       : "// No question content available."
   );
   const [output, setOutput] = useState("");
