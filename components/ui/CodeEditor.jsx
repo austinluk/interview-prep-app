@@ -4,10 +4,10 @@ import { useState } from "react";
 import Editor from "@monaco-editor/react";
 import questions from "@/data/questions";
 
-const CodeEditor = ({ width = "100%" }) => {
-  const initialQuestion =
+let CodeEditor = ({ width = "100%" }) => {
+  let initialQuestion =
     questions.length > 0
-      ? questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
+      ?  questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
       : null;
 
   /*
@@ -19,46 +19,52 @@ let searchCoordinates = function(c, t) {
 
 */
 
-  const [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
-  const [code, setCode] = useState(
+  let [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
+  let [code, setCode] = useState(
     currentQuestion
       ? currentQuestion.content + "\n\n// Write your code here \n\n"
       : "// No question content available."
   );
-  const [output, setOutput] = useState("");
+  let [output, setOutput] = useState("");
 
-  const runCode = () => {
+  let runCode = () => {
     try {
-      const result = new Function(code)();
+      let result = new Function(code)();
       setOutput(result !== undefined ? result.toString() : "No output");
     } catch (error) {
       setOutput(`Error: ${error.message}`);
     }
   };
 
-  const checkTests = () => {
+  let checkTests = () => {
     let passed = true;
     let results = "";
 
     for (let i = 0; i < currentQuestion["testcase"].length; i++) {
-      const testcase = currentQuestion["testcase"][i];
-      const expectedSolution = currentQuestion["solution"][i];
+      let testcase = currentQuestion["testcase"][i];
+      let expectedSolution = currentQuestion["solution"][i];
 
       try {
-        const args = Object.values(testcase)
+        let args = Object.values(testcase)
           .map((arg) => JSON.stringify(arg))
           .join(", ");
 
-        const result = new Function(
+        let result = new Function(
           code + "\n" + `return ${currentQuestion["function_name"]}(${args})`
         )();
 
-        if (result === expectedSolution) {
+        if (Array.isArray(expectedSolution)) {
+          expectedSolution = JSON.stringify(expectedSolution);
+          result = JSON.stringify(result);
+          testcase= JSON.stringify(testcase);
+        }
+
+        if (result == expectedSolution) {
           results += `Test case ${i + 1}: Passed\n`;
         } else {
           results += `Test case ${
             i + 1
-          }: Failed\nExpected: ${expectedSolution}\nGot: ${result}\n\n`;
+          }: Failed\nInput:${testcase}\nExpected: ${expectedSolution}\nGot: ${result}\n\n`;
           passed = false;
         }
       } catch (error) {
