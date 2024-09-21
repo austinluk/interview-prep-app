@@ -1,14 +1,16 @@
-"use client"
+'use client';
+
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const CodeEditor = () => {
+const CodeEditor = ({ width = "100%" }) => {
   const [code, setCode] = useState('// Write your code here');
 
   return (
-    <div style={{ height: '90vh' }}>
+    <div style={{ width: width, height: '100vh' }}>
       <Editor
         height="100%"
+        width="100%"
         defaultLanguage="javascript"
         value={code}
         theme="vs-dark"
