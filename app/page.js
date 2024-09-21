@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="bg-background">
-      <CodeEditor width={"70vw"} />
+      <CodeEditor width="60vw" /> 
     </div>
   );
 }
