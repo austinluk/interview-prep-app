@@ -10,6 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import OpenAI from "openai";
 
 export default function TextToSpeech() {
   const [text, setText] = useState("");
@@ -26,22 +27,12 @@ export default function TextToSpeech() {
   //send to ChatGPT
   const sendTextToChatGPT = async (inputText) => {
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: { role: "user", content: inputText }, // Update this line
-      });
-
-      if (!response.ok) {
-        const errorData = await response.text(); // Use text() to capture the response body
-        throw new Error(errorData || "Something went wrong");
-      }
-
-      // If the response is valid, try to parse it as JSON
-      const data = await response.json();
-      setResponse(data.message); // Store the response to display it
+      const openai = new OpenAI({apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, dangerouslyAllowBrowser: true});
+      const completion = await openai.chat.completions.create({
+        messages: [{role: "system", content: inputText}],
+        model: "gpt-4o-mini"
+      })
+      console.log("RESPONSE: ",completion.choices[0]);
     } catch (error) {
       console.error("Error sending text to ChatGPT:", error);
       setResponse("Error occurred while contacting ChatGPT.");
@@ -75,9 +66,6 @@ export default function TextToSpeech() {
     if (isListening) {
       recognition.stop();
       setIsListening(false);
-      const responseText = await sendTextToChatGPT(text);
-      console.log("ChatGPT Response:", responseText);
-      console.log("ChatGPT Response:", responseText);
     } else {
       recognition.start();
       setIsListening(true);
@@ -89,6 +77,9 @@ export default function TextToSpeech() {
     recognition.onresult = (event) => {
       const spokenText = event.results[0][0].transcript;
       setText(spokenText);
+
+      console.log("SpokenText: ",spokenText)
+      sendTextToChatGPT(spokenText);
     };
 
     recognition.onend = () => {
@@ -125,6 +116,11 @@ export default function TextToSpeech() {
             {isListening ? "Stop Listening" : "Use Microphone"}
           </TooltipContent>
         </Tooltip>
+      </div>
+      {/* Display the response from ChatGPT */}
+      <div className="mt-4 p-3 border rounded-lg">
+        <h3 className="font-bold">ChatGPT Response:</h3>
+        <p>{response}</p>
       </div>
     </form>
   );
