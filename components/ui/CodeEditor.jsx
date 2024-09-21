@@ -7,7 +7,7 @@ const CodeEditor = ({ width = "100%" }) => {
   const [code, setCode] = useState(`
     
 let a = function(){
-    return "hi"
+    return "austin likes boys"
 }
 
 a();`);
