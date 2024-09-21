@@ -14,7 +14,7 @@ import {
 export default function TextToSpeech() {
   const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState('');
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
 
@@ -71,10 +71,13 @@ export default function TextToSpeech() {
   }, []);
 
   const handleMicClick = async (event) => {
+  const handleMicClick = async (event) => {
     event.preventDefault(); // Prevent the default form submission
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      const responseText = await sendTextToChatGPT(text);
+      console.log("ChatGPT Response:", responseText);
       const responseText = await sendTextToChatGPT(text);
       console.log("ChatGPT Response:", responseText);
     } else {
