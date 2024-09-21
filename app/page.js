@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/ui/CodeEditor";
 import SpeechToText from "@/components/ui/SpeechToTextSynthesis";
@@ -10,6 +12,7 @@ import {
 
 import Image from "next/image";
 import { Timer } from "@/components/ui/timer";
+import { useState } from "react";
 
 export default function Home() {
   const [progress, setProgress] = useState(0);
