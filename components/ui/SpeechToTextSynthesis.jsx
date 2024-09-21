@@ -78,8 +78,6 @@ export default function TextToSpeech() {
       setIsListening(false);
       const responseText = await sendTextToChatGPT(text);
       console.log("ChatGPT Response:", responseText);
-      const responseText = await sendTextToChatGPT(text);
-      console.log("ChatGPT Response:", responseText);
     } else {
       recognition.start();
       setIsListening(true);
@@ -130,4 +128,5 @@ export default function TextToSpeech() {
       </div>
     </form>
   );
+}
 }
