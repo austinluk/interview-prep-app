@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/ui/CodeEditor";
-import TextToSpeech from "@/components/ui/text_to_speech";
+import SpeechToText from "@/components/ui/SpeechToTextSynthesis";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   ResizableHandle,
@@ -25,7 +25,7 @@ export default function Home() {
           <Timer />
           <div className="flex h-full items-center justify-center p-6">
             <TooltipProvider>
-              <TextToSpeech />
+              <SpeechToText />
             </TooltipProvider>
           </div>
         </ResizablePanel>
