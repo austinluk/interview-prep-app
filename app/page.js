@@ -8,8 +8,8 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
-import { Timer } from "@/components/ui/timer";
 import Image from "next/image";
+import { Timer } from "@/components/ui/timer";
 
 export default function Home() {
   return (
