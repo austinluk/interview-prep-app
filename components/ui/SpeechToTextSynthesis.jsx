@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,19 +12,46 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function TextToSpeech() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
+  const [response, setResponse] = useState('');
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
 
   // Check if the browser supports SpeechRecognition
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition;
+
+  //send to ChatGPT
+  const sendTextToChatGPT = async (inputText) => {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: { role: "user", content: inputText }, // Update this line
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text(); // Use text() to capture the response body
+        throw new Error(errorData || "Something went wrong");
+      }
+
+      // If the response is valid, try to parse it as JSON
+      const data = await response.json();
+      setResponse(data.message); // Store the response to display it
+    } catch (error) {
+      console.error("Error sending text to ChatGPT:", error);
+      setResponse("Error occurred while contacting ChatGPT.");
+    }
+  };
 
   if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.continuous = false; // Continuous listening or single phrase
-    recognition.lang = 'en-US'; // Set the language
+    recognition.lang = "en-US"; // Set the language
     recognition.interimResults = false; // Show partial results
   } else {
     console.error("SpeechRecognition is not supported in this browser.");
@@ -43,11 +70,14 @@ export default function TextToSpeech() {
     populateVoices();
   }, []);
 
-  const handleMicClick = (event) => {
+  const handleMicClick = async (event) => {
+  const handleMicClick = async (event) => {
     event.preventDefault(); // Prevent the default form submission
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      const responseText = await sendTextToChatGPT(text);
+      console.log("ChatGPT Response:", responseText);
     } else {
       recognition.start();
       setIsListening(true);
@@ -98,4 +128,5 @@ export default function TextToSpeech() {
       </div>
     </form>
   );
+}
 }

@@ -82,20 +82,22 @@ let searchCoordinates = function(c, t) {
 
   return (
     <div
-      style={{
-        width: width,
-        height: "auto",
-        backgroundColor: "#1e1e1e",
-        color: "#ffffff",
-      }}
+      // style={{
+      //   width: width,
+      //   height: "auto",
+      //   backgroundColor: "#1e1e1e",
+      //   color: "#ffffff",
+      // }}
+      className="h-full bg-muted text-black border border-border
+      rounded-2xl p-8 overflow-scroll"
     >
-      <div style={{ height: "70vh" }}>
+      <div className="h-96">
         <Editor
           height="100%"
           width="100%"
           defaultLanguage="javascript"
           value={code}
-          theme="vs-dark"
+          theme="vs-light"
           onChange={(value) => setCode(value)}
         />
       </div>
@@ -103,14 +105,7 @@ let searchCoordinates = function(c, t) {
       <div style={{ padding: "10px" }}>
         <button
           onClick={runCode}
-          style={{
-            backgroundColor: "#007acc",
-            color: "#ffffff",
-            padding: "10px 15px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Run Code
         </button>
@@ -130,15 +125,7 @@ let searchCoordinates = function(c, t) {
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "10px",
-          backgroundColor: "#252526",
-          color: "#ffffff",
-          height: "150px",
-          overflowY: "auto",
-        }}
-      >
+      <div className="p-2 bg-white text-black h-36">
         <h3>Output:</h3>
         <pre>{output}</pre>
       </div>
