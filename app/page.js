@@ -10,7 +10,7 @@ import {
 
 import { Timer } from "@/components/ui/timer";
 import Image from "next/image";
-import SpeechSynthesisComponent from "@/components/ui/SpeechToSpeechSynthesis";
+import SpeechSynthesisComponent from "@/components/ui/SpeechToTextSynthesis";
 
 export default function Home() {
   return (

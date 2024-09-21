@@ -37,8 +37,6 @@ const SpeechSynthesisComponent = () => {
     if (text && selectedVoice) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.voice = selectedVoice;
-      utterance.pitch = pitch;
-      utterance.rate = rate;
       window.speechSynthesis.speak(utterance);
     }
   };
