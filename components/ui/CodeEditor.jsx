@@ -31,7 +31,7 @@ a();`);
         color: "#ffffff",
       }}
     >
-      <div style={{ height: "60vh" }}>
+      <div style={{ height: "70vh" }}>
         <Editor
           height="100%"
           width="100%"
