@@ -8,6 +8,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
+import { Timer } from "@/components/ui/timer";
 import Image from "next/image";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
+          <Timer />
           <div className="flex h-full items-center justify-center p-6">
             <TooltipProvider>
               <TextToSpeech />
