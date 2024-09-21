@@ -7,7 +7,7 @@ import questions from "@/data/questions";
 const CodeEditor = ({ width = "100%" }) => {
   const initialQuestion =
     questions.length > 0
-      ? questions[0] //questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
+      ? questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
       : null;
 
   /*
