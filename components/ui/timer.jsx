@@ -45,7 +45,7 @@ export function Timer() {
     <div className="relative">
       {isBlurred && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-lg z-50">
-        <h1 className="text-bold text-center text-5xl text-white">Welcome to Interview Prep</h1>
+        <h1 className="text-bold text-center text-5xl text-white">Welcome to Tech Interview Prep</h1>
     </div>
     )}
 
