@@ -19,13 +19,13 @@ export default function Home() {
       </header>
       <div className="flex-grow overflow-scroll">
         <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-          <ResizablePanel defaultSize={50}>
+          <ResizablePanel defaultSize={70}>
             <div className="h-full p-6 overflow-scroll">
               <CodeEditor />
             </div>
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel defaultSize={50}>
+          <ResizablePanel defaultSize={30}>
             <Timer />
             <div className="h-full p-6">
               <TooltipProvider>

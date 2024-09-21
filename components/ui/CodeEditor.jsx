@@ -17,6 +17,7 @@ const CodeEditor = ({ width = "100%" }) => {
       : "// No question content available."
   );
   const [output, setOutput] = useState("");
+  // const [testResult, setTestResult] = useState(false);
 
   const runCode = () => {
     try {
@@ -40,7 +41,7 @@ const CodeEditor = ({ width = "100%" }) => {
       //   color: "#ffffff",
       // }}
       className="h-full bg-muted text-black border border-border
-      rounded-2xl p-4 overflow-scroll"
+      rounded-2xl p-8 overflow-scroll"
     >
       <div className="h-96">
         <Editor
