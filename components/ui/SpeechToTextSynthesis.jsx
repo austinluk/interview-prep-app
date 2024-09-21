@@ -1,7 +1,17 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+"use client";
 
-const SpeechSynthesisComponent = () => {
+import React, { useState, useEffect } from 'react';
+import { Mic } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+export default function TextToSpeech() {
   const [text, setText] = useState('');
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
@@ -24,24 +34,17 @@ const SpeechSynthesisComponent = () => {
     const synth = window.speechSynthesis;
 
     const populateVoices = () => {
-      const voices = synth.getVoices();
-      setVoices(voices);
-      setSelectedVoice(voices[0] || null);
+      const availableVoices = synth.getVoices();
+      setVoices(availableVoices);
+      setSelectedVoice(availableVoices[0] || null);
     };
 
     synth.onvoiceschanged = populateVoices;
     populateVoices();
   }, []);
 
-  const handleSpeech = () => {
-    if (text && selectedVoice) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.voice = selectedVoice;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const handleMicClick = () => {
+  const handleMicClick = (event) => {
+    event.preventDefault(); // Prevent the default form submission
     if (isListening) {
       recognition.stop();
       setIsListening(false);
@@ -69,39 +72,30 @@ const SpeechSynthesisComponent = () => {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>React Speech Synthesis with Mic Input</h1>
-      <textarea
-        rows="4"
-        cols="50"
-        placeholder="Type something to speak..."
+    <form className="relative h-full w-full overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
+      <Label htmlFor="message" className="sr-only">
+        Message
+      </Label>
+      <Textarea
+        id="message"
+        placeholder="Start speaking to start..."
+        className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        readOnly
       />
-      <br />
-      <label htmlFor="voiceSelect">Choose Voice: </label>
-      <select
-        id="voiceSelect"
-        onChange={(e) =>
-          setSelectedVoice(voices.find((voice) => voice.name === e.target.value))
-        }
-      >
-        {voices.map((voice, index) => (
-          <option key={index} value={voice.name}>
-            {voice.name} ({voice.lang})
-          </option>
-        ))}
-      </select>
-      <br />
-     
-
-      <br />
-      <button onClick={handleSpeech}>Speak</button>
-      <button onClick={handleMicClick}>
-        {isListening ? 'Stop Listening' : 'Start Listening'}
-      </button>
-    </div>
+      <div className="flex items-center p-3 pt-0">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button onClick={handleMicClick} variant="ghost" size="icon">
+              <Mic className="size-4" />
+              <span className="sr-only">Use Microphone</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="top">
+            {isListening ? "Stop Listening" : "Use Microphone"}
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </form>
   );
-};
-
-export default SpeechSynthesisComponent;
+}

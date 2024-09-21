@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import CodeEditor from "@/components/ui/CodeEditor";
-import TextToSpeech from "@/components/ui/text_to_speech";
+import SpeechToText from "@/components/ui/SpeechToTextSynthesis";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   ResizableHandle,
@@ -10,7 +10,6 @@ import {
 
 import { Timer } from "@/components/ui/timer";
 import Image from "next/image";
-import SpeechSynthesisComponent from "@/components/ui/SpeechToTextSynthesis";
 
 export default function Home() {
   return (
@@ -24,14 +23,9 @@ export default function Home() {
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
           <Timer />
-          {/* <p></p> */}
-          <p>Hello there</p>
-          <div className="bg-blue-300">
-            <SpeechSynthesisComponent />
-          </div>
           <div className="flex h-full items-center justify-center p-6">
             <TooltipProvider>
-              <TextToSpeech />
+              <SpeechToText />
             </TooltipProvider>
           </div>
         </ResizablePanel>
