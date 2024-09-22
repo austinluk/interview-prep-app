@@ -9,6 +9,7 @@ import { useStore } from "./wrapper";
 let CodeEditor = ({ width = "100%" }) => {
   const setScore = useStore((state) => state.setJudgeScore)
 
+  
 
   const handleScore = (newScore) => {
     setScore(newScore);

@@ -20,8 +20,10 @@ export default function TextToSpeech() {
   const [response, setResponse] = useState("");
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
-  const systemPrompt = `Pretend you are a interviewer for a software company, about to ask leetcode-style questions. Make a short introduction in first-person.`
+  const systemPrompt = `You are a interviewer for a software company, about to ask leetcode-style questions. Make a very short and concise introduction in first-person.`
   const [conversationHistory, setConversationHistory] = useState([]);
+  const [code, setCode] = useState(""); // Add state to store code content
+  
   // Check if the browser supports SpeechRecognition
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -42,7 +44,7 @@ export default function TextToSpeech() {
         messages: messages,
         model: "gpt-4o-mini" 
       });
-      // setResponse(completion.choices[0].message.content)
+    
 
       const newMessage = { role: "assistant", content: completion.choices[0].message.content };
       setConversationHistory([...conversationHistory, { role: "user", content: inputText }, newMessage]);
