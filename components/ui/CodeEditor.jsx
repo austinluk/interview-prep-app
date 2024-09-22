@@ -7,6 +7,7 @@ import questions from "@/data/questions";
 import { useStore } from "./wrapper";
 import OpenAI from "openai";
 import { useDebouncedCallback } from "use-debounce";
+import ProgressModal from "./progressModal";
 
 let CodeEditor = ({ width = "100%" }) => {
   // ** GLOBAL STATES **
@@ -34,10 +35,11 @@ let CodeEditor = ({ width = "100%" }) => {
   };
 
   // Get a random question
-  let initialQuestion =
-    questions.length > 0
-      ? questions[Math.floor(Math.random() * (questions.length - 1))]
-      : null;
+  // let initialQuestion =
+  //   questions.length > 0
+  //     ? questions[Math.floor(Math.random() * (questions.length - 1))]
+  //     : null;
+  let initialQuestion = questions[0]; // Set initial question to first question
 
   // Set initial code to initialize GPT context
 
@@ -61,7 +63,7 @@ let CodeEditor = ({ width = "100%" }) => {
 
   // Send user editor code to ChatGPT
   const handleUserCode = async (code) => {
-    console.log("EVENT HANDELED");
+    // console.log("EVENT HANDELED");
     try {
       const openai = new OpenAI({
         apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -99,13 +101,13 @@ let CodeEditor = ({ width = "100%" }) => {
         newMessage,
       ]);
       // setResponse(completion.choices[0].message.content);
-      console.log("CODE EDITOR CONVERSATION HISTORY:", conversationHistory);
+      // console.log("CODE EDITOR CONVERSATION HISTORY:", conversationHistory);
       // console.log(
       //   "EDITOR CODE REACTION: ",
       //   completion.choices[0].message.content
       // );
       setResponse(completion.choices[0].message.content);
-      console.log("EDITOR CODE REACTION: ", response);
+      // console.log("EDITOR CODE REACTION: ", response);
       // console.log(completion.choices[0].message.content);
     } catch (error) {
       console.error("Error sending text to ChatGPT:", error);
@@ -119,7 +121,8 @@ let CodeEditor = ({ width = "100%" }) => {
   // Handler for running the code
   let runCode = () => {
     try {
-      let result = new Function(code)();
+      let result = eval(code);
+      console.log("RUN CODE: ", code);
       setOutput(result !== undefined ? result.toString() : "No output");
     } catch (error) {
       setOutput(`Error: ${error.message}`);
@@ -196,7 +199,7 @@ let CodeEditor = ({ width = "100%" }) => {
             setCode(value);
             // handleUserCode(value);
             debouncedHandleUserCode(value);
-            console.log("NEW STUFF: ", value);
+            // console.log("NEW STUFF: ", value);
           }}
         />
       </div>
@@ -204,12 +207,12 @@ let CodeEditor = ({ width = "100%" }) => {
       <div style={{ padding: "10px" }}>
         <button
           onClick={runCode}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-3"
         >
           Run Code
         </button>
 
-        <button
+        {/* <button
           onClick={checkTests}
           style={{
             backgroundColor: "#007acc",
@@ -221,7 +224,8 @@ let CodeEditor = ({ width = "100%" }) => {
           }}
         >
           Run tests
-        </button>
+        </button> */}
+        <ProgressModal checkTests={checkTests} />
       </div>
 
       <div className="p-2 bg-white text-black h-auto">

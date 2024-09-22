@@ -15,7 +15,7 @@ import { useStore } from "./wrapper";
 
 export default function TextToSpeech() {
   // Global states
-  const score = useStore((state) => state.judge_score);
+  const judgeScore = useStore((state) => state.judge_score);
   const question = useStore((state) => state.question);
   const code = useStore((state) => state.code);
   const conversationHistory_GLOBAL = useStore((state) => state.history);
@@ -24,11 +24,18 @@ export default function TextToSpeech() {
   );
   const response_GLOBAL = useStore((state) => state.response);
   const setResponse_GLOBAL = useStore((state) => state.setResponse);
+  const micClicks = useStore((state) => state.micClicks);
+  const setMicClicks = useStore((state) => state.setMicClicks);
+  const incrementMicClicks = useStore((state) => state.incrementMicClicks);
+
+  // const micClicks_GLOBAL = useStore((state) => state.micClicks);
+  // const setMicClicks_GLOBAL = useStore((state) => state.setMicClicks);
 
   // console.log("HHISTORY:", conversationHistory);
   // Local states
   const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
+  // const [micClicks, setMicClicks] = useState(0);
   // const [response, setResponse] = useState("");
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
@@ -121,11 +128,16 @@ export default function TextToSpeech() {
     sendSpeechToGPT("");
   }, []);
 
-  const handleMicClick = async (event) => {
+  const handleMicClick = (event) => {
     event.preventDefault(); // Prevent the default form submission
+    incrementMicClicks();
+    console.log("CLICKS:", micClicks);
+
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      // setMicClicks((prevClicks) => prevClicks + 1);
+      // console.log();
     } else {
       recognition.start();
       setIsListening(true);
@@ -154,8 +166,8 @@ export default function TextToSpeech() {
 
   return (
     <form className="flex flex-col h-full w-full overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
-      <div className="h-1/3">
-        <Label>{score + "%"}</Label>
+      <div className="h-1/2">
+        {/* <Label>{judgeScore + "%" + " " + micClicks}</Label> */}
         <Textarea
           id="message"
           placeholder="Start speaking when you're ready..."
@@ -163,6 +175,7 @@ export default function TextToSpeech() {
           value={text}
           readOnly
         />
+
         <div className="flex items-center p-3 pt-0">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -178,7 +191,7 @@ export default function TextToSpeech() {
         </div>
       </div>
       {/* Display the response from ChatGPT */}
-      <div className="flex flex-col p-3 border rounded-lg h-2/3 overflow-scroll text-wrap">
+      <div className="flex flex-col p-3 border rounded-lg h-1/2 overflow-scroll text-wrap">
         <h3 className="font-bold">Your virtual interviewer:</h3>
         <p className=" break-words">{response_GLOBAL}</p>
       </div>

@@ -1,5 +1,36 @@
 let questions = [
   {
+    content: `// Captain Vega is designing a fuel monitoring system
+// for her spaceship. The system tracks fuel values of different
+// tanks and Captain Vega needs to know if two tanks have a combined
+// fuel amount that matches a target value.
+
+// Write a function
+// \`twoSum(fuelTanks: number[], target: number): boolean\` 
+// that returns true if there are two distinct fuel values 
+// in the array that add up to the target, otherwise false.
+
+// Example 1:
+// Input: fuelTanks = [10, 15, 3, 7], target = 17
+// Output: true
+
+// Example 2:
+// Input: fuelTanks = [1, 2, 3, 4], target = 8
+// Output: false`,
+    testcase: [
+      { fuelTanks: [10, 15, 3, 7], target: 17 },
+      { fuelTanks: [1, 2, 3, 4], target: 8 },
+      { fuelTanks: [], target: 5 },
+      { fuelTanks: [5], target: 5 },
+      { fuelTanks: [3, 3, 3, 3], target: 6 },
+      { fuelTanks: [9007199254740991, 1], target: 9007199254740992 },
+    ],
+    solution: [true, false, false, false, true, true],
+    input_type: { fuelTanks: "number[]", target: "number" },
+    output_type: "boolean",
+    function_name: "twoSum",
+  },
+  {
     content: `// Alan is designing a spaceship dashboard where the flight
 // coordinates are updated continuously. He needs to know if a
 // specific number exists in the flight coordinates array.

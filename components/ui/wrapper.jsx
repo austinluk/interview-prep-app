@@ -19,6 +19,7 @@ export const useStore = create((set) => ({
   question: "",
   code: "",
   conversationHistory: [],
+  micClicks: 0,
   setText: (newText) => set({ text: newText }),
   setResponse: (newResponse) => set({ response: newResponse }),
   setIsListening: (value) => set({ isListening: value }),
@@ -26,6 +27,9 @@ export const useStore = create((set) => ({
   setQuestion: (newQ) => set({ question: newQ }),
   setCode: (newCode) => set({ code: newCode }),
   setConversationHistory: (newHistory) => set({ history: newHistory }),
+  setMicClicks: (clicks) => set({ micClicks: clicks }),
+  incrementMicClicks: () =>
+    set((state) => ({ micClicks: state.micClicks + 1 })),
 }));
 
 export default function MainContent() {

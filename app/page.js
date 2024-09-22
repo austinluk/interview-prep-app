@@ -49,49 +49,6 @@ export default function Home() {
           </ResizablePanel>
         </ResizablePanelGroup> */}
         <MainContent />
-
-        <div className="fixed bottom-4 right-4">
-          <Button onClick={() => setIsModalOpen(true)}>
-            Open Progress Tracker
-          </Button>
-        </div>
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-96">
-              <h2 className="text-xl font-bold">Your Progress</h2>
-              <div className="h-2 bg-gray-200 rounded">
-                <div
-                  className="h-full bg-blue-500 rounded"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="mt-2 text-lg">Progress: {progress}%</p>
-              <p className="text-lg font-semibold">Grade: {getLetterGrade()}</p>
-              <div className="mt-2">
-                {/* instead of having them as buttons have the ai auto increment it as you are solving the question */}
-                <Button
-                  onClick={() =>
-                    setProgress(progress < 100 ? progress + 10 : 100)
-                  }
-                >
-                  Increase Progress
-                </Button>
-                <Button
-                  onClick={() => setProgress(progress > 0 ? progress - 10 : 0)}
-                >
-                  Decrease Progress
-                </Button>
-              </div>
-              <br></br>
-              <div>
-                <p>report: asdasd</p>
-              </div>
-              <div className="mt-4">
-                <Button onClick={() => setIsModalOpen(false)}>Close</Button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
