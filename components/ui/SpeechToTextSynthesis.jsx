@@ -131,7 +131,7 @@ export default function TextToSpeech() {
   const handleMicClick = (event) => {
     event.preventDefault(); // Prevent the default form submission
     incrementMicClicks();
-    // console.log("CLICKS:", micClicks);
+    console.log("CLICKS:", micClicks);
 
     if (isListening) {
       recognition.stop();

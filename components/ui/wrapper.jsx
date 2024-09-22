@@ -1,5 +1,5 @@
 "use client";
-
+import dynamic from "next/dynamic";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -32,6 +32,11 @@ export const useStore = create((set) => ({
     set((state) => ({ micClicks: state.micClicks + 1 })),
 }));
 
+const SpeechToTextNoSSR = dynamic(
+  () => import("@/components/ui/SpeechToTextSynthesis"),
+  { ssr: false }
+);
+
 export default function MainContent() {
   return (
     <ResizablePanelGroup direction="horizontal" className="w-full h-full">
@@ -45,7 +50,7 @@ export default function MainContent() {
         <Timer />
         <div className="h-full p-6">
           <TooltipProvider>
-            <SpeechToText />
+            <SpeechToTextNoSSR />
           </TooltipProvider>
         </div>
       </ResizablePanel>
