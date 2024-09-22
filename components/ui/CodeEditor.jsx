@@ -1,23 +1,34 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import Editor from "@monaco-editor/react";
 import questions from "@/data/questions";
 
 let CodeEditor = ({ width = "100%" }) => {
+  const [progress, setProgress] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [testResults, setTestResults] = useState([]);
+
+  // Function to get letter grade based on progress
+  const getLetterGrade = () => {
+    if (progress >= 90) return "A";
+    if (progress >= 80) return "B";
+    if (progress >= 70) return "C";
+    if (progress >= 60) return "D";
+    return "F";
+  };
+
   let initialQuestion =
     questions.length > 0
-      ?  questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
+      ? questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
       : null;
-
-  /*
-Question 0 answer
-
-let searchCoordinates = function(c, t) {
-    return c.includes(t);
-}
-
-*/
 
   let [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
   let [code, setCode] = useState(
@@ -36,9 +47,9 @@ let searchCoordinates = function(c, t) {
     }
   };
 
-  let checkTests = () => {
-    let passed = true;
-    let results = "";
+  const checkTests = () => {
+    let passedCount = 0;
+    let results = [];
 
     for (let i = 0; i < currentQuestion["testcase"].length; i++) {
       let testcase = currentQuestion["testcase"][i];
@@ -56,24 +67,43 @@ let searchCoordinates = function(c, t) {
         if (Array.isArray(expectedSolution)) {
           expectedSolution = JSON.stringify(expectedSolution);
           result = JSON.stringify(result);
-          testcase= JSON.stringify(testcase);
+          testcase = JSON.stringify(testcase);
         }
 
-        if (result == expectedSolution) {
-          results += `Test case ${i + 1}: Passed\n`;
-        } else {
-          results += `Test case ${
-            i + 1
-          }: Failed\nInput:${testcase}\nExpected: ${expectedSolution}\nGot: ${result}\n\n`;
-          passed = false;
-        }
+        let passed = result == expectedSolution;
+
+        if (passed) passedCount++;
+
+        results.push({
+          testCaseIndex: i + 1,
+          passed,
+          testcase,
+          expected: expectedSolution,
+          result,
+        });
       } catch (error) {
-        results += `Test case ${i + 1}: Error\nMessage: ${error.message}\n\n`;
-        passed = false;
+        results.push({
+          testCaseIndex: i + 1,
+          passed: false,
+          testcase,
+          expected: expectedSolution,
+          result: `Error: ${error.message}`,
+        });
       }
     }
 
-    setOutput(`All tests passed: ${passed}\n\n` + results);
+    // Update progress based on passed test cases
+    let totalTests = currentQuestion["testcase"].length;
+    let newProgress = Math.floor((passedCount / totalTests) * 100);
+    setProgress(newProgress);
+
+    return results;
+  };
+
+  const handleOpenModal = () => {
+    const results = checkTests(); // Run tests when opening the modal
+    setTestResults(results);
+    setIsModalOpen(true);
   };
 
   if (!currentQuestion) {
@@ -81,16 +111,7 @@ let searchCoordinates = function(c, t) {
   }
 
   return (
-    <div
-      // style={{
-      //   width: width,
-      //   height: "auto",
-      //   backgroundColor: "#1e1e1e",
-      //   color: "#ffffff",
-      // }}
-      className="h-full bg-muted text-black border border-border
-      rounded-2xl p-8 overflow-scroll"
-    >
+    <div className="h-full bg-muted text-black border border-border rounded-2xl p-8 overflow-scroll">
       <div className="h-96">
         <Editor
           height="100%"
@@ -109,26 +130,65 @@ let searchCoordinates = function(c, t) {
         >
           Run Code
         </button>
+      
+      
+      <button onClick={handleOpenModal} className="ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Open Progress Tracker</button>
 
-        <button
-          onClick={checkTests}
-          style={{
-            backgroundColor: "#007acc",
-            color: "#ffffff",
-            padding: "10px 15px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Run tests
-        </button>
-      </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl font-bold">Your Progress</h2>
+            <div className="h-2 bg-gray-200 rounded">
+              <div
+                className="h-full bg-blue-500 rounded"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="mt-2 text-lg">Progress: {progress}%</p>
+            <p className="text-lg font-semibold">Grade: {getLetterGrade()}</p>
+
+            {/* Dynamic accordion for test results */}
+            <div className="mt-4">
+              <Accordion type="single" collapsible className="w-full">
+                {testResults.map((result) => (
+                  <AccordionItem
+                    key={`test-case-${result.testCaseIndex}`}
+                    value={`test-case-${result.testCaseIndex}`}
+                  >
+                    <AccordionTrigger>{`Test Case ${result.testCaseIndex}`}</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        <strong>Input:</strong> {result.testcase}
+                      </p>
+                      <p>
+                        <strong>Expected:</strong> {result.expected}
+                      </p>
+                      <p>
+                        <strong>Result:</strong> {result.result}
+                      </p>
+                      <p>
+                        <strong>Status:</strong>{" "}
+                        {result.passed ? "Passed" : "Failed"}
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+
+            {/* Close button for modal */}
+            <div className="mt-4">
+              <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="p-2 bg-white text-black h-36">
         <h3>Output:</h3>
         <pre>{output}</pre>
       </div>
+    </div>
     </div>
   );
 };
