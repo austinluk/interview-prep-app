@@ -9,11 +9,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import Logo from "@/image.png";
 
 import Image from "next/image";
 import { Timer } from "@/components/ui/timer";
 import { useState } from "react";
 import MainContent from "@/components/ui/wrapper";
+import { ModeToggle } from "@/components/ui/dark_mode_toggle";
 
 export default function Home() {
   const [progress, setProgress] = useState(0);
@@ -27,9 +29,11 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex flex-col p-2">
-      <header className="mx-8 my-3 font-bold bg-muted p-5 rounded-2xl">
-        <p className="text-2xl">Leet Me In</p>
+    <div className="h-screen flex flex-col p-2 ">
+      <header className="flex items-center space-x-5 mx-8 my-3 font-bold bg-muted p-5 rounded-2xl">
+        <Image src={Logo} height={50} width={50} />
+        <p className="text-2xl text-foreground">Leet Me In</p>
+        <ModeToggle />
       </header>
       <div className="flex-grow overflow-scroll">
         {/* <ResizablePanelGroup direction="horizontal" className="w-full h-full">

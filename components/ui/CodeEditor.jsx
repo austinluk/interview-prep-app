@@ -185,7 +185,7 @@ let CodeEditor = ({ width = "100%" }) => {
       //   backgroundColor: "#1e1e1e",
       //   color: "#ffffff",
       // }}
-      className="h-full bg-muted text-black border border-border
+      className="h-full text-foreground border border-border
       rounded-2xl p-8 overflow-scroll"
     >
       <div className="h-96">
@@ -194,7 +194,7 @@ let CodeEditor = ({ width = "100%" }) => {
           width="100%"
           defaultLanguage="javascript"
           value={code}
-          theme="vs-light"
+          theme="vs-dark"
           onChange={(value) => {
             setCode(value);
             // handleUserCode(value);
@@ -228,7 +228,7 @@ let CodeEditor = ({ width = "100%" }) => {
         <ProgressModal checkTests={checkTests} />
       </div>
 
-      <div className="p-2 bg-white text-black h-auto">
+      <div className="p-2 bg-muted text-foreground h-auto">
         <h3>Output:</h3>
         <pre>{output}</pre>
       </div>
