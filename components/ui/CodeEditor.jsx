@@ -158,7 +158,7 @@ let CodeEditor = ({ width = "100%" }) => {
                     <AccordionTrigger>{`Test Case ${result.testCaseIndex}`}</AccordionTrigger>
                     <AccordionContent>
                       <p>
-                        <strong>Input:</strong> {JSON.stringify(result.testcase)}
+                        <strong>Input:</strong> {result.testcase}
                       </p>
                       <p>
                         <strong>Expected:</strong> {result.expected}

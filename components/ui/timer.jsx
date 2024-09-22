@@ -49,7 +49,7 @@ export function Timer() {
     </div>
     )}
 
-    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50 bg-white p-4 rounded-md shadow-lg border border-gray-400">
+    <div className="fixed top-0 right-0 z-50 bg-white p-4 rounded-md shadow-lg border border-gray-400 m-4">
       <h1 className="text-xl font-bold text-center">{formatTime(time)}</h1>
       <div className="mt-2 space-x-2">
         <Button variant="default" size="sm" onClick={startTimer}>
