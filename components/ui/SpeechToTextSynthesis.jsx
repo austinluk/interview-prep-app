@@ -11,28 +11,47 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import OpenAI from "openai";
+import { useStore } from "./wrapper";
 
 export default function TextToSpeech() {
+  const score = useStore((state) => state.judge_score);
   const [text, setText] = useState("");
   const [voices, setVoices] = useState([]);
   const [response, setResponse] = useState("");
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isListening, setIsListening] = useState(false);
-
+  const systemPrompt = `Pretend you are a interviewer for a software company, about to ask leetcode-style questions. Make a short introduction in first-person.`
+  const [conversationHistory, setConversationHistory] = useState([]);
   // Check if the browser supports SpeechRecognition
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition;
 
   //send to ChatGPT
-  const sendTextToChatGPT = async (inputText) => {
+  const sendTextToChatGPT = async (inputText, isInit) => {
     try {
       const openai = new OpenAI({apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, dangerouslyAllowBrowser: true});
+      
+      const messages = [
+        { role: "system", content: systemPrompt },
+        ...conversationHistory,
+        { role: "user", content: inputText }
+      ];
+      
       const completion = await openai.chat.completions.create({
-        messages: [{role: "system", content: inputText}],
-        model: "gpt-4o-mini"
-      })
+        messages: messages,
+        model: "gpt-4o-mini" 
+      });
+      // setResponse(completion.choices[0].message.content)
+
+      const newMessage = { role: "assistant", content: completion.choices[0].message.content };
+      setConversationHistory([...conversationHistory, { role: "user", content: inputText }, newMessage]);
+      setResponse(completion.choices[0].message.content);
+      console.log("RESPONSE: ", completion.choices[0]);
+      console.log(completion.choices[0].message.content);
+
       console.log("RESPONSE: ",completion.choices[0]);
+      console.log(completion.choices[0].message.content);
     } catch (error) {
       console.error("Error sending text to ChatGPT:", error);
       setResponse("Error occurred while contacting ChatGPT.");
@@ -59,6 +78,8 @@ export default function TextToSpeech() {
 
     synth.onvoiceschanged = populateVoices;
     populateVoices();
+    sendTextToChatGPT("", true);
+
   }, []);
 
   const handleMicClick = async (event) => {
@@ -79,7 +100,7 @@ export default function TextToSpeech() {
       setText(spokenText);
 
       console.log("SpokenText: ",spokenText)
-      sendTextToChatGPT(spokenText);
+      sendTextToChatGPT(spokenText, false);
     };
 
     recognition.onend = () => {
@@ -97,9 +118,10 @@ export default function TextToSpeech() {
       <Label htmlFor="message" className="sr-only">
         Message
       </Label>
+      <Label>{score+"%"}</Label>
       <Textarea
         id="message"
-        placeholder="Start speaking to start..."
+        placeholder="Start speaking when you're ready..."
         className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
         value={text}
         readOnly
@@ -119,8 +141,8 @@ export default function TextToSpeech() {
       </div>
       {/* Display the response from ChatGPT */}
       <div className="mt-4 p-3 border rounded-lg">
-        <h3 className="font-bold">ChatGPT Response:</h3>
-        <p>{response}</p>
+        <h3 className="font-bold">Your virtual interviewer:</h3>
+        <p> {response} </p>
       </div>
     </form>
   );

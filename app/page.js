@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { Timer } from "@/components/ui/timer";
 import { useState } from "react";
+import MainContent from "@/components/ui/wrapper";
 
 export default function Home() {
   const [progress, setProgress] = useState(0);
@@ -31,7 +32,7 @@ export default function Home() {
         <p className="text-2xl">Leet Me In</p>
       </header>
       <div className="flex-grow overflow-scroll">
-        <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+        {/* <ResizablePanelGroup direction="horizontal" className="w-full h-full">
           <ResizablePanel defaultSize={70}>
             <div className="h-full p-6 overflow-scroll">
               <CodeEditor />
@@ -46,7 +47,8 @@ export default function Home() {
               </TooltipProvider>
             </div>
           </ResizablePanel>
-        </ResizablePanelGroup>
+        </ResizablePanelGroup> */}
+        <MainContent />
 
         <div className="fixed bottom-4 right-4">
           <Button onClick={() => setIsModalOpen(true)}>

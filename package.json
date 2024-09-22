@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-resizable-panels": "^2.1.3",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "postcss": "^8",

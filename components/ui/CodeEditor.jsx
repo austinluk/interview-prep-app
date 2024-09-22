@@ -4,7 +4,15 @@ import { useState } from "react";
 import Editor from "@monaco-editor/react";
 import questions from "@/data/questions";
 
+import { useStore } from "./wrapper";
+
 let CodeEditor = ({ width = "100%" }) => {
+  const setScore = useStore((state) => state.setJudgeScore)
+
+
+  const handleScore = (newScore) => {
+    setScore(newScore);
+  }
   let initialQuestion =
     questions.length > 0
       ?  questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
@@ -39,8 +47,10 @@ let searchCoordinates = function(c, t) {
   let checkTests = () => {
     let passed = true;
     let results = "";
+    let correct = 0;
+    let questions = currentQuestion["testcase"].length;
 
-    for (let i = 0; i < currentQuestion["testcase"].length; i++) {
+    for (let i = 0; i < questions; i++) {
       let testcase = currentQuestion["testcase"][i];
       let expectedSolution = currentQuestion["solution"][i];
 
@@ -61,6 +71,7 @@ let searchCoordinates = function(c, t) {
 
         if (result == expectedSolution) {
           results += `Test case ${i + 1}: Passed\n`;
+          correct++;
         } else {
           results += `Test case ${
             i + 1
@@ -74,6 +85,7 @@ let searchCoordinates = function(c, t) {
     }
 
     setOutput(`All tests passed: ${passed}\n\n` + results);
+    handleScore(correct/questions*100);
   };
 
   if (!currentQuestion) {
@@ -125,7 +137,7 @@ let searchCoordinates = function(c, t) {
         </button>
       </div>
 
-      <div className="p-2 bg-white text-black h-36">
+      <div className="p-2 bg-white text-black h-auto">
         <h3>Output:</h3>
         <pre>{output}</pre>
       </div>
