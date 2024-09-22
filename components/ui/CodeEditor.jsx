@@ -5,37 +5,118 @@ import Editor from "@monaco-editor/react";
 import questions from "@/data/questions";
 
 import { useStore } from "./wrapper";
+import OpenAI from "openai";
+import { useDebouncedCallback } from "use-debounce";
 
 let CodeEditor = ({ width = "100%" }) => {
-  const setScore = useStore((state) => state.setJudgeScore)
+  // ** GLOBAL STATES **
 
-  
+  // Set initial score
+  const setScore = useStore((state) => state.setJudgeScore);
 
+  // Question (question.content) to send to GPT
+  const setQuestionToGPT = useStore((state) => state.setQuestion);
+
+  // User code to send to GPT
+  const setUserCodeToGPT = useStore((state) => state.setCode);
+
+  const setResponse = useStore((state) => state.setResponse);
+  const response = useStore((state) => state.response);
+
+  const conversationHistory = useStore((state) => state.history);
+  const setConversationHistory = useStore(
+    (state) => state.setConversationHistory
+  );
+
+  // Handler for initial score (%)
   const handleScore = (newScore) => {
     setScore(newScore);
-  }
+  };
+
+  // Get a random question
   let initialQuestion =
     questions.length > 0
-      ?  questions[Math.floor(Math.random() * (questions.length - 1 - 0 + 1))]
+      ? questions[Math.floor(Math.random() * (questions.length - 1))]
       : null;
 
-  /*
-Question 0 answer
+  // Set initial code to initialize GPT context
 
-let searchCoordinates = function(c, t) {
-    return c.includes(t);
-}
-
-*/
-
+  // Current question to display
   let [currentQuestion, setCurrentQuestion] = useState(initialQuestion);
+  setQuestionToGPT(currentQuestion?.content.replace(/\/\//g, ""));
+
+  // Current code to display
   let [code, setCode] = useState(
     currentQuestion
-    ? currentQuestion.content + "\n\n// Write your code here \n\n" + `const ${currentQuestion["function_name"]} = function (${Object.keys(currentQuestion["input_type"]).join(", ")}) {\n}`
-    : "// No question content available."
+      ? currentQuestion.content +
+          "\n\n// Write your code here \n\n" +
+          `const ${currentQuestion["function_name"]} = function (${Object.keys(
+            currentQuestion["input_type"]
+          ).join(", ")}) {\n}`
+      : "// No question content available."
   );
+
+  // Output when running code
   let [output, setOutput] = useState("");
 
+  // Send user editor code to ChatGPT
+  const handleUserCode = async (code) => {
+    console.log("EVENT HANDELED");
+    try {
+      const openai = new OpenAI({
+        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+        dangerouslyAllowBrowser: true,
+      });
+
+      const messages = [
+        ...(conversationHistory || []),
+        {
+          role: "system",
+          content: "Here is the code the candidate has written so far: " + code,
+        },
+      ];
+
+      const completion = await openai.chat.completions.create({
+        messages: messages,
+        model: "gpt-4o-mini",
+      });
+
+      const newMessage = {
+        role: "assistant",
+        content: completion.choices[0].message.content,
+      };
+      setConversationHistory([
+        {
+          role: "system",
+          content:
+            "The candidate already knows the question, so you can start the interview directly. So don't state any parts of the question, including the function name. DON'T GIVE SOLUTIONS UNDER ANY CIRCUMSTANCES!",
+        },
+        ...(conversationHistory || []),
+        {
+          role: "user",
+          content: "Here is the code the candidate has written so far: " + code,
+        },
+        newMessage,
+      ]);
+      // setResponse(completion.choices[0].message.content);
+      console.log("CODE EDITOR CONVERSATION HISTORY:", conversationHistory);
+      // console.log(
+      //   "EDITOR CODE REACTION: ",
+      //   completion.choices[0].message.content
+      // );
+      setResponse(completion.choices[0].message.content);
+      console.log("EDITOR CODE REACTION: ", response);
+      // console.log(completion.choices[0].message.content);
+    } catch (error) {
+      console.error("Error sending text to ChatGPT:", error);
+      // setResponse("Error occurred while contacting ChatGPT.");
+    }
+  };
+
+  // Debounce handleUserCode to execute 10 seconds after typing stops
+  const debouncedHandleUserCode = useDebouncedCallback(handleUserCode, 10000);
+
+  // Handler for running the code
   let runCode = () => {
     try {
       let result = new Function(code)();
@@ -67,7 +148,7 @@ let searchCoordinates = function(c, t) {
         if (Array.isArray(expectedSolution)) {
           expectedSolution = JSON.stringify(expectedSolution);
           result = JSON.stringify(result);
-          testcase= JSON.stringify(testcase);
+          testcase = JSON.stringify(testcase);
         }
 
         if (result == expectedSolution) {
@@ -86,7 +167,7 @@ let searchCoordinates = function(c, t) {
     }
 
     setOutput(`All tests passed: ${passed}\n\n` + results);
-    handleScore(correct/questions*100);
+    handleScore((correct / questions) * 100);
   };
 
   if (!currentQuestion) {
@@ -111,7 +192,12 @@ let searchCoordinates = function(c, t) {
           defaultLanguage="javascript"
           value={code}
           theme="vs-light"
-          onChange={(value) => setCode(value)}
+          onChange={(value) => {
+            setCode(value);
+            // handleUserCode(value);
+            debouncedHandleUserCode(value);
+            console.log("NEW STUFF: ", value);
+          }}
         />
       </div>
 
